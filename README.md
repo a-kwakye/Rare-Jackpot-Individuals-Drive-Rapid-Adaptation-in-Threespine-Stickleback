@@ -2,7 +2,7 @@
 
 ### This is repository of scripts and other datasets for the paper: Rare-Jackpot-Individuals-Drive-Rapid-Adaptation-in-Threespine-Stickleback
 
-###Jackpot Individuals And Not Recombination Drive Rapid Freshwater Adaptation In Threespine Stickleback
+### Jackpot Individuals And Not Recombination Drive Rapid Freshwater Adaptation In Threespine Stickleback
 
 AUTHORS: Alexander Kwakye1,2, Kerry Reid3, Matthew A. Wund4, David C. Heins5, Michael A. Bell6, Krishna R. Veeramah1* 
 
