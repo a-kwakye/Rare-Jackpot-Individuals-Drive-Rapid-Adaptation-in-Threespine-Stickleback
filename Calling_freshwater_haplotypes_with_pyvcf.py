@@ -8,14 +8,14 @@ from matplotlib import colors
 
 '''
 This function takes 4 arguments: 1: a file containing all the names of the vcf files. 2: a tab-delimited file with the SNPs in 
-344 loci with 6 columns: chromosome name, the representative SNP for each locus, number of snps within the locus, positions matching the genome coordinates of the snps, freshwater alleles at these snps, marine (oceanic) alleles at these snps.
+344 loci with 6 columns: chromosome name, the representative SNP for each locus, number of SNPs within the locus, positions matching the genome coordinates of the snps, freshwater alleles at these snps, marine (oceanic) alleles at these snps.
 3: the absolute path to the vcf files given in argument 1
-4: minimum number of snps that should be in a locus in order for haplotypes to be called for the locus (we set this to 3 in the paper).
+4: minimum number of SNPs that should be in a locus in order for haplotypes to be called for the locus (we set this to 3 in the paper).
 '''
 
 vcf_list_file=argv[1]# this contains a list of individual genomes in a vcf format 
-snp_list_file=argv[2] #'fw_haps_poolSNPs.CH_SC_LB.2500_50.50000.phy_specific_BF.res'#argv[2]
-path_to_vcf=argv[3]
+snp_list_file=argv[2] #'fw_haps_poolSNPs.CH_SC_LB.2500_50.50000.phy_specific_BF.res'
+path_to_vcf=argv[3] 
 snps_min=argv[4]
 
 file = open(vcf_list_file, 'r') #arg 2
