@@ -1,6 +1,6 @@
 # Rare-Jackpot-Individuals-Drive-Rapid-Adaptation-in-Threespine-Stickleback
 
-### This is repository of scripts and other datasets for the paper: Rare-Jackpot-Individuals-Drive-Rapid-Adaptation-in-Threespine-Stickleback
+### This is a repository of scripts for the paper: Rare-Jackpot-Individuals-Drive-Rapid-Adaptation-in-Threespine-Stickleback
 
 ### Jackpot Individuals And Not Recombination Drive Rapid Freshwater Adaptation In Threespine Stickleback
 
@@ -18,5 +18,8 @@
 ##### Department of Ecology & Evolutionary Biology, Tulane University, New Orleans LA 70118, USA
 
 ##### University of California Museum of Paleontology, University of California, Berkeley, CA 94720, USA
+
+##### 
+
 
 
