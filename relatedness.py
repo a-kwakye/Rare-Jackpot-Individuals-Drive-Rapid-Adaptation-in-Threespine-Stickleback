@@ -131,7 +131,8 @@ for i in range(len(Males)):
     Males_all_samps.append(k)
     Males_all_samps_dict[k]=k
 
-file=open('jackpots.txt','r') # lcMLkin_result_merged_jack_sex.txt lcMLkin_neutral_chroms_result_merged_jack_sex.txt
+#load jackpot carriers 
+file=open('jackpots.txt','r') 
 File_list=file.read()
 jackpots_list=File_list.split('\n')
 if jackpots_list[-1] =='':
