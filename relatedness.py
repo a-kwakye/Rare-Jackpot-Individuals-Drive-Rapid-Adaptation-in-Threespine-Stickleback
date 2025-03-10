@@ -471,20 +471,7 @@ node_types = {'Jackpot': 'o', 'Non_jackpot': '^'}
 for node, attrs in G_13_14.nodes(data=True):
     year = attrs['year']
     deg=G_13_14.degree(node)
-    dos=attrs['dosage']
-#     if len(attrs) > 4:
-#         if attrs['y-hap']=='GGC':
-#             print('k', attrs)
-#             nx.draw_networkx_nodes(G_13_14, pos, nodelist=[node],node_color=node_colors['GGC'] ,  node_shape=node_types['GGC'], node_size=deg*30)
-            
-#         elif attrs['mito-hap']=='GGGGGCG':
-#             nx.draw_networkx_nodes(G_13_14, pos, nodelist=[node],node_color=node_colors['GGGGGCG'] ,  node_shape=node_types['GGGGGCG'], node_size=deg*30)
-#         else:
-#             nx.draw_networkx_nodes(G_13_14, pos, nodelist=[node],node_color=node_colors[year] ,  node_shape=node_types[dos], node_size=deg*30)
-#             #print(attrs)
-#     else:
-#         nx.draw_networkx_nodes(G_13_14, pos, nodelist=[node],node_color=node_colors[year] ,  node_shape=node_types[dos], node_size=deg*30)
-    
+    dos=attrs['dosage']    
         
     nx.draw_networkx_nodes(G_13_14, pos, nodelist=[node],node_color=node_colors[year] ,  node_shape=node_types[dos], node_size=deg*30)
     
@@ -511,19 +498,6 @@ for year, color in node_colors.items():
     node_labels.append(str(year))
 
 edge_handles, edge_labels = plt.gca().get_legend_handles_labels()
-
-#nx.draw_networkx_labels(G_13_14, pos, labels={node: node for node in G_13_14.nodes()}, font_size=4.5, font_color='black', font_weight='bold')
-
-
-#nx.draw_networkx_labels(G_13_14, pos, labels={k_sort[0][0]: k_sort[0][0] }, font_size=10, font_color='black', font_weight='bold')
-#nx.draw_networkx_labels(G_13_14, pos, labels={'SC-2013-PB-X140-G5': 'SC-2013-PB-X140-G5' }, font_size=10, font_color='black', font_weight='bold')
-
-# nx.draw_networkx_labels(G_13_14, pos, labels={k_sort[0][0]: k_sort[0][0] }, font_size=10, font_color='black', font_weight='bold')
-
-
-
-# for node, (x, y) in pos.items():
-#     plt.text(x, y, str(node), fontsize=10, ha='center', va='center', rotation=270, rotation_mode='anchor', fontweight='bold')
 
 
 plt.legend(handles=node_handles, labels=node_labels,   fontsize=10)
