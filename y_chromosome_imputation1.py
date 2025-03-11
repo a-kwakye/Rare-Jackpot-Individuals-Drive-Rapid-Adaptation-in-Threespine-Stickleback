@@ -13,18 +13,6 @@ import pysam
 import copy
 
 
-# min_samps=100
-# min_freq=0.1
-# corr_thresh=0.90
-# min_snp=2
-# max_freq=1-min_freq
-# min_dist=10000
-# min_call_rate=0.8
-# corr_thresh_greedy=0.8
-# WA_thresh=0.8
-
-#imputation 
-
 rho_cut_off=0.8
 dist_cut_off=1000
 rho_cum_cut_off=0.80
@@ -467,7 +455,7 @@ for a in range(len(informative_snps_no_imp_ar_t)):
                                         
                                         
 
-#phyogenetics
+
 informative_snps_post_impute=np.transpose(informative_snps_no_imp_ar_t)
 informative_snps_pre_impute=np.transpose(informative_snps_no_imp_ar_t_dpcp)
 sites_with_min=[]
