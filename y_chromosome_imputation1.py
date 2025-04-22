@@ -14,7 +14,7 @@ import copy
 
 
 rho_cut_off=0.8
-dist_cut_off=1000
+dist_cut_off=10000
 rho_cum_cut_off=0.80
 rho_strict=0.99
 min_freq=0.1
