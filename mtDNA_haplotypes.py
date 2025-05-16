@@ -18,7 +18,7 @@ import csv
 import pysam
 
 
-mito_dir='/Users/verses/Desktop/Desktop_Alexander_MacBook_Pro/folders/Analyses/TN5_analyses/Mitochondrial_seq_TN5/'
+mito_dir='TN5_analyses/Mitochondrial_seq_TN5/'
 
 List_of_files=open(mito_dir+'SC-14_fasta.list','r')
 File_list=List_of_files.read()
