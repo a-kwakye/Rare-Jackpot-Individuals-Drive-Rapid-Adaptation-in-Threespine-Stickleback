@@ -228,7 +228,6 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
         'SC2020': "#155084"
     }
     
-    # Create a 6x4 grid of subplots
     fig, axs = plt.subplots(6, 4, figsize=(20, 20))  # Adjust the figsize as needed
     axs = axs.flatten()  # Flatten the grid to easily iterate through
     
@@ -246,10 +245,8 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
         
         ax.axvline(mean_fw_content, color='red', linestyle='--', linewidth=3, label=f'Mean: {mean_fw_content:.2f}')
         
-        # Set xlim from 0 to the max of the list
         ax.set_xlim(0, 300)
         
-        # Set x-axis label only for the bottom row
         if i == len(datasets) - 1:
             ax.set_xlabel('FW Content', fontsize=14)
         else:
@@ -259,8 +256,7 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
         ax.set_ylabel(f'{label}', fontsize=14)
         
         ax.legend(loc='upper right')
-        
-        # Plot the histograms for each dataset in the remaining columns
+    
         for j in range(len(toplot[0][0])):
             if j == 0:
                 k = 'cM'
@@ -269,7 +265,6 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
             elif j == 2:
                 k = 'Number_of_FWALs'
             
-            # Calculate the mean for the current data
             means_fwals = np.mean(toplot[0][:, j])
             
             ax = axs[4 * i + j + 1]  # Adjust index to account for the shifted column
@@ -277,13 +272,11 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
             ax.axvline(means_fwals, color='red', linestyle='--', linewidth=3, label=f'Mean: {means_fwals:.2f}')
             ax.set_xlim(bin_range)
             
-            # Set x-axis label only for the bottom row
             if i == len(datasets) - 1:
                 ax.set_xlabel(f'Contiguous FWAL({k})', fontsize=14)
             else:
                 ax.set_xlabel('')
             
-            # Clear y-axis labels for columns 2, 3, and 4
             if (4 * i + j + 1) % 4 != 0:  # Columns 2, 3, and 4
                 ax.set_ylabel('')
             else:
@@ -291,16 +284,14 @@ def plot_graphs(datasets, labels, fw_content_all_timepoints):
             
             ax.legend(loc='upper right')
     
-    # Adjust layout to prevent overlap
     plt.tight_layout()
 
-    # Save the figure as a PDF
     plot_name = f'contiguous_FWALs_hist_grid_15_with_fw_content.pdf'
     plt.savefig(plot_name, dpi=600)
     plt.show()
     plt.close()
 
-# Example usage with actual data
+
 datasets = [toplot_rs19, toplot_13, toplot_14, toplot_15, toplot_17, toplot_20]
 labels = ['RS2019', 'SC2013', 'SC2014', 'SC2015', 'SC2017', 'SC2020']
 
