@@ -1,0 +1,393 @@
+
+initialize() {
+	 setSeed(SEED);
+	 initializeSLiMModelType("WF");
+    // initializeTreeSeq();
+    defineConstant("NUM_FRESHWATER", 10);
+    defineConstant("NE_FW", FW_Ne);
+    defineConstant("NE_AN", AN_Ne);
+    defineConstant("M_AN_TO_FW", MIG_AN_TO_FW);
+    defineConstant("M_FW_TO_AN", MIG_FW_TO_AN);
+    defineConstant("NEW_FW_SIZE", New_Lake_size);
+    //defineConstant("output_name", NEW_FW_SIZE);
+    //print(output_name);
+    //defineConstant("seq_length", 35000000);
+    defineConstant("n_mutations", 341);
+    defineConstant("n_sample", 0.1); // change this to 0.5 to ensure one fw pop is established.
+    defineConstant("add_hap_tick", 2);
+    defineConstant("sel_coef_bot", 1.5);
+    defineConstant("sel_coef_bot2", 1.5);
+    defineConstant("L", 341);
+    defineConstant('pos_vect',seq(0, L, 1)); 
+ 
+    defineConstant("g1end", asInteger(L / 2));
+    defineConstant("g2start", g1end + 1);
+    defineConstant("g2end", L);
+    defineGlobal("jackpots", c());
+    defineGlobal("jackpots2", c());
+ 	 initializeMutationType("m1", 1, "f", 0.015);  
+    initializeMutationType("m2", 1, "f", 0.0);  
+      
+    defineConstant("outdir", "/gpfs/scratch/akwakye/AIM_1/Nat_comm_review_Responses/SLIM_sims_revised/outdir_revised2/");
+	
+    initializeGenomicElementType("g1", m1, 1);
+    initializeGenomicElementType("g2", m2, 1);
+
+    initializeGenomicElement(g1, 0, g2end);
+    //initializeGenomicElement(g2, g2start, g2end);
+    
+    print(pos_vect);
+    print(L);
+    print( g1end);
+    print( g2end);
+    // defineGlobal("pos_vect", seq(0, seq_length, seq_length/(n_mutations - 1)));
+    
+  
+    initializeMutationRate(0);
+    initializeRecombinationRate(0.5); // spacing ensures unlinked
+    //initializeMutationType("m1", 1, "f", 0.01);
+    
+	// initializeGenomicElementType("g1",m1, 1.0);    
+//    pos_vector=c();
+//    for (i in 0:(n_mutations - 1)) {
+//        pos = i * 1e6;  // 1Mb spacing to ensure independence
+//        print(pos);
+//        initializeGenomicElement(g1, pos, pos);
+//        pos_vector = c(pos_vector, pos);
+//    }
+// 	 defineGlobal("pos_vect", pos_vector); 
+//    print(pos_vect);
+}
+
+
+
+1 early() {
+    sim.addSubpop("p0", NE_AN);  // Anadromous
+    for (i in 1:NUM_FRESHWATER) {
+        sim.addSubpop("p" + i, NE_FW);  // Freshwater
+        
+    }
+    
+ 	//community.allMutationTypes[m1].convertToSubstitution = F;
+  m1.convertToSubstitution = F;
+ }
+  
+//   for (i in 0:(n_mutations - 1)){
+//		community.allMutationTypes[i].convertToSubstitution = F;	}
+//		
+//}
+
+
+
+1 late() {
+    an_pop = sim.subpopulations[0];  // p0
+    for (i in 1:NUM_FRESHWATER) {
+        fw_pop = sim.subpopulations[i];  // p1 to p10
+        an_pop.setMigrationRates(fw_pop, M_AN_TO_FW);  // anadromous → freshwater
+        fw_pop.setMigrationRates(an_pop, M_FW_TO_AN);  // freshwater → anadromous
+    }
+}
+
+add_hap_tick late() {
+	// print( seq(from=0, to=100, by=1));
+	haplosomes = sample(p1.haplosomes, asInteger(n_sample * NE_FW * 2));
+	//print(pos_vect);
+	muts = haplosomes.addNewDrawnMutation(m1, pos_vect);
+	
+	//sample(p1.haplosomes, asInteger(n_sample * NE_FW * 2)).addNewDrawnMutation(m1, pos_vect);
+
+	
+}
+
+// count number of jackpot carriers per tick 
+
+
+1:1000 early() {    // change the fitness of individuals to make only jackpot carriers survive
+	
+	inds = p0.individuals;
+	//jackpots = c();
+   for (ind in inds){
+      muts =  ind.haplosomes.mutations;
+   	mutCount = size(muts);
+   	// print(1.0 + 0.147 * mutCount);
+   	if (mutCount > 34) {
+      	jackpots = c(jackpots, mutCount);
+      	}
+   }
+   print(size(jackpots)/10000);
+ }
+
+1000 early() {sim.addSubpopSplit("p12",NEW_FW_SIZE,p0);}
+
+1000 late() {    // change the fitness of individuals to make only jackpot carriers survive
+	
+	inds = p12.individuals;
+	//jackpots = c();
+   for (ind in inds){
+      muts =  ind.haplosomes.mutations;
+   	mutCount = size(muts);
+   	if (mutCount > 34) {
+      	jackpots2 = c(jackpots2, mutCount);
+      	}
+   }
+   
+   print(size(jackpots2));
+ }
+
+
+
+//1000:1055 fitnessEffect() {    // change the fitness of individuals to make only jackpot carriers survive
+//    if (individual.subpopulation == p12) {
+//        // Collect all mutations from both haplotypes
+//        muts = individual.haplosomes.mutations;
+//        
+//        // Count unique mutations
+//        mutCount = size(muts);
+//        print(1.0 + 0.147 * mutCount);
+//        
+//        if (1.0 + 0.147 * mutCount > 2.0 ) {
+//        		
+//            return 2.0; // 1.0 + 0.00147 * mutCount; // 0.1; // + 0.00147 * mutCount;
+//        } else {
+//        		
+//            return 1.0 + 0.147 * mutCount;
+//        }
+//    } else {
+//        // No fitness effect in other subpopulations
+//        return 1.0;
+//    }
+//}
+
+
+1000:1055 fitnessEffect() {    // change the fitness of individuals to make only jackpot carriers survive
+    if (individual.subpopulation == p12) {
+        // Collect all mutations from both haplotypes
+        muts = individual.haplosomes.mutations;
+        
+        // Count unique mutations
+        mutCount = size(muts);
+        print(1.0 + 0.147 * mutCount);
+        return 1.0 + 0.147 * mutCount;
+        } 
+   else {
+        // No fitness effect in other subpopulations
+        return 1.0;
+    }
+}
+
+
+
+
+
+
+
+1000 late(){ print('end_p0');}
+
+//1000:1055 early() {    // change the fitness of individuals to make only jackpot carriers survive
+//	
+//	inds = p12.individuals;
+//	//jackpots = c();
+//   for (ind in inds){
+//      muts =  ind.haplosomes.mutations;
+//   	mutCount = size(muts);
+//   	if (mutCount > 34) {
+//      	jackpots = c(jackpots, mutCount);
+//      	}
+//   }
+//   
+//   print(size(jackpots)/NEW_FW_SIZE);
+// }
+
+
+
+1000:1055 early() { // after bottleneck, an exponential growth. 
+if (p12.individualCount < NEW_FW_SIZE)
+{newSize = asInteger(round(1.05^(sim.cycle - 999) * 100));
+p12.setSubpopulationSize(newSize);
+	}
+}
+	
+
+mutationEffect(m1, p0) { return 1.0 / effect; }
+
+
+
+1000 early() {
+inds = p12.sampleIndividuals(NEW_FW_SIZE);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1000_early.txt");
+}
+
+
+1000 late() {
+inds = p0.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p0_1000_late.vcf");
+
+}
+
+
+1000 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1000_late.vcf");
+}
+
+1000 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1000_late.txt");
+}
+
+1001 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1001_late.vcf");
+}
+
+1001 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1001_late.txt");
+}
+
+1002 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1002_late.vcf");
+}
+
+1002 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1002_late.txt");
+}
+
+
+1003 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1003_late.vcf");
+}
+1003 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1003_late.txt");
+}
+
+1004 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1004_late.vcf");
+}
+1004 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1004_late.txt");
+}
+
+1005 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1005_late.vcf");
+}
+
+1005 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1005_late.txt");
+}
+
+1006 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1006_late.vcf");
+}
+
+1006 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1006_late.txt");
+}
+
+
+1007 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1007_late.vcf");
+}
+
+1007 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1007_late.txt");
+}
+
+
+1008 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1008_late.vcf");
+}
+
+1008 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1008_late.txt");
+}
+
+
+1009 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1009_late.vcf");
+}
+
+1009 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1009_late.txt");
+}
+
+
+
+1010 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1010_late.vcf");
+}
+
+1010 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1010_late.txt");
+}
+
+
+1020 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1020_late.vcf");
+}
+
+1020 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1020_late.txt");
+}
+
+
+
+1030 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1030_late.vcf");
+}
+
+1030 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1030_late.txt");
+}
+
+
+1040 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1040_late.vcf");
+}
+
+1040 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1040_late.txt");
+}
+
+
+1050 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividualsToVCF(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1050_late.vcf");
+}
+
+1050 late() {
+inds = p12.sampleIndividuals(96);
+inds.outputIndividuals(filePath=outdir+SEED+"_"+NEW_FW_SIZE+"_"+"p12_1050_late.txt");
+}
+
+
+
+
+1056 late() {
+   
+    sim.simulationFinished();
+}
