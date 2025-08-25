@@ -45,18 +45,7 @@ initialize() {
   
     initializeMutationRate(0);
     initializeRecombinationRate(0.5); // spacing ensures unlinked
-    //initializeMutationType("m1", 1, "f", 0.01);
-    
-	// initializeGenomicElementType("g1",m1, 1.0);    
-//    pos_vector=c();
-//    for (i in 0:(n_mutations - 1)) {
-//        pos = i * 1e6;  // 1Mb spacing to ensure independence
-//        print(pos);
-//        initializeGenomicElement(g1, pos, pos);
-//        pos_vector = c(pos_vector, pos);
-//    }
-// 	 defineGlobal("pos_vect", pos_vector); 
-//    print(pos_vect);
+
 }
 
 
@@ -72,10 +61,6 @@ initialize() {
   m1.convertToSubstitution = F;
  }
   
-//   for (i in 0:(n_mutations - 1)){
-//		community.allMutationTypes[i].convertToSubstitution = F;	}
-//		
-//}
 
 
 
@@ -136,29 +121,6 @@ add_hap_tick late() {
 
 
 
-//1000:1055 fitnessEffect() {    // change the fitness of individuals to make only jackpot carriers survive
-//    if (individual.subpopulation == p12) {
-//        // Collect all mutations from both haplotypes
-//        muts = individual.haplosomes.mutations;
-//        
-//        // Count unique mutations
-//        mutCount = size(muts);
-//        print(1.0 + 0.147 * mutCount);
-//        
-//        if (1.0 + 0.147 * mutCount > 2.0 ) {
-//        		
-//            return 2.0; // 1.0 + 0.00147 * mutCount; // 0.1; // + 0.00147 * mutCount;
-//        } else {
-//        		
-//            return 1.0 + 0.147 * mutCount;
-//        }
-//    } else {
-//        // No fitness effect in other subpopulations
-//        return 1.0;
-//    }
-//}
-
-
 1000:1055 fitnessEffect() {    // change the fitness of individuals to make only jackpot carriers survive
     if (individual.subpopulation == p12) {
         // Collect all mutations from both haplotypes
@@ -177,26 +139,7 @@ add_hap_tick late() {
 
 
 
-
-
-
-
 1000 late(){ print('end_p0');}
-
-//1000:1055 early() {    // change the fitness of individuals to make only jackpot carriers survive
-//	
-//	inds = p12.individuals;
-//	//jackpots = c();
-//   for (ind in inds){
-//      muts =  ind.haplosomes.mutations;
-//   	mutCount = size(muts);
-//   	if (mutCount > 34) {
-//      	jackpots = c(jackpots, mutCount);
-//      	}
-//   }
-//   
-//   print(size(jackpots)/NEW_FW_SIZE);
-// }
 
 
 
