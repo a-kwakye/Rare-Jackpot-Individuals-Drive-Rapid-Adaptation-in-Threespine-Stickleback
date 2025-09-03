@@ -42,7 +42,6 @@ def process_slim(param_index, seed, output):
     except Exception as e:
         output.put(f"Exception for seed {seed}, param set {param_index}: {str(e)}")
 
-# === Step 4: Run the batches ===
 for batch_index, batch in enumerate(batches):
     print(f"\nLaunching batch {batch_index + 1}/{len(batches)}")
     
